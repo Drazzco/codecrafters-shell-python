@@ -6,12 +6,13 @@ def main():
     # print("Logs from your program will appear here!")
 
     # Uncomment this block to pass the first stage
-    sys.stdout.write("$ ")
-    sys.stdout.flush()
-
-    # Wait for user input
-    command = input()
-    print(f"{command}: command not found")
+    while True:
+        sys.stdout.write("$ ")
+        sys.stdout.flush()
+        # Wait for user input
+        args = input().split()
+        if True:
+            print(f"{args[0]}: command not found")
 
 
 if __name__ == "__main__":
