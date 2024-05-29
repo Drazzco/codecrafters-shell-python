@@ -8,6 +8,7 @@ class Shell:
             "echo": self.shell_echo,
             "exit": self.shell_exit,
             "type": self.shell_type,
+            "pwd": self.shell_pwd,
         }
     
     def shell_echo(self, args):
@@ -45,6 +46,9 @@ class Shell:
             return p.as_posix()
         return None
     
+    def shell_pwd(self):
+        print(f"{os.getcwd()}")
+    
     def execute_command(self, command_line):
         parts = command_line.split()
         if not parts:
@@ -53,7 +57,7 @@ class Shell:
         cmd_args = parts[1:]
         if  cmd_name in self.builtins:
             self.builtins[cmd_name](cmd_args)
-        elif "exe" in cmd_name:
+        elif ".exe" in cmd_name:
             if location := self.executable_exists(self.find_command_in_path(cmd_name)):
                     try:
                         with os.popen(f"{location} {cmd_args[0]}") as _exec:
