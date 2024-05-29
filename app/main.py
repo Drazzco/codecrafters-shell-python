@@ -36,7 +36,7 @@ class Shell:
         for dir in path_dirs:
             potential_path = os.path.join(dir, command)
             if os.path.isfile(potential_path) and os.access(potential_path, os.X_OK):
-                if location := executable_exists(potential_path, command):
+                if location := self.executable_exists(potential_path, command):
                     try:
                         with os.popen(f"{location} {command}") as _exec:
                             sys.stdout.write(_exec.read())
