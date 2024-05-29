@@ -2,6 +2,7 @@ import sys
 
 
 def main():
+    list = ["echo", "exit", "type"]
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
@@ -15,6 +16,16 @@ def main():
                 print(f"{command}: command not found")
         elif args[0] == "echo":
             print(" ".join(args[1:]))
+        elif args[0] == "type":
+            flag = False
+            for x in list:
+                if args[1] == x:
+                    flag = True
+                    break
+            if flag:
+                print(f"{args[1]} is a shell builtin")
+            else:
+                print(f"{args[1]} not found")
         else:
             print(f"{args[0]}: command not found")
 
