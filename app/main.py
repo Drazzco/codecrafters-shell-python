@@ -46,7 +46,7 @@ class Shell:
             return p.as_posix()
         return None
     
-    def shell_pwd(self):
+    def shell_pwd(self, args=None):
         print(f"{os.getcwd()}")
     
     def execute_command(self, command_line):
