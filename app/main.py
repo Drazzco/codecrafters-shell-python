@@ -1,33 +1,65 @@
 import sys
+import os
 
+class Shell:
+    def __init__(self):
+        self.builtins = {
+            "echo": self.shell_echo,
+            "exit": self.shell_exit,
+            "type": self.shell_type,
+        }
+    
+    def shell_echo(self, args):
+        print(" ".join(args))
+    
+    def shell_exit(self, args):
+        try:
+            exit_code = int(args[0]) if args else 0
+        except ValueError:
+            exit_code = 0
+        sys.exit(exit_code)
 
-def main():
-    list = ["echo", "exit", "type"]
-    while True:
-        sys.stdout.write("$ ")
-        sys.stdout.flush()
-        # Wait for user input
-        args = input().split()
-        if args[0] == "exit":
-            if args[1] == "0":
-                sys.exit(0)
-            else:
-                command = args[0] + " " + args[1]
-                print(f"{command}: command not found")
-        elif args[0] == "echo":
-            print(" ".join(args[1:]))
-        elif args[0] == "type":
-            flag = False
-            for x in list:
-                if args[1] == x:
-                    flag = True
-                    break
-            if flag:
-                print(f"{args[1]} is a shell builtin")
-            else:
-                print(f"{args[1]} not found")
+    def shell_type(self, args):
+        if not args:
+            return
+        command = args[0]
+        if command in self.builtins:
+            print(f"{command} is a shell builtin")
+        elif command_path := self.find_command_in_path(command):
+            print(f"{command} is {command_path}")
         else:
-            print(f"{args[0]}: command not found")
+            print(f"{command} not found")
+
+    def find_command_in_path(self, command):
+        path_dirs = os.environ.get("PATH", "").split(os.pathsep)
+        for dir in path_dirs:
+            potential_path = os.path.join(dir, command)
+            if os.path.isfile(potential_path) and os.access(potential_path, os.X_OK):
+                return potential_path
+        return None
+    
+    def execute_command(self, command_line):
+        parts = command_line.split()
+        if not parts:
+            return
+        cmd_name = parts[0]
+        cmd_args = parts[1:]
+        if  cmd_name in self.builtins:
+            self.builtins[cmd_name](cmd_args)
+        else:
+            print(f"{cmd_name}: command not found")
+    
+    def run(self):
+        while True:
+            sys.stdout.write("$ ")
+            sys.stdout.flush()
+            try:
+                command_line = input().strip()
+                self.execute_command(command_line)
+            except (EOFError, KeyboardInterrupt):
+                print()
+                break
 
 if __name__ == "__main__":
-    main()
+    shell = Shell()
+    shell.run()
