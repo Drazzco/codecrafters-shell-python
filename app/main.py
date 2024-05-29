@@ -57,7 +57,7 @@ class Shell:
         cmd_args = parts[1:]
         if  cmd_name in self.builtins:
             self.builtins[cmd_name](cmd_args)
-        elif ".exe" in cmd_name:
+        elif "_exe" in cmd_name:
             if location := self.executable_exists(self.find_command_in_path(cmd_name)):
                     try:
                         with os.popen(f"{location} {cmd_args[0]}") as _exec:
