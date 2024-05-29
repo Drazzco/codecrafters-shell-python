@@ -1,5 +1,6 @@
 import sys
 import os
+from pathlib import Path
 
 class Shell:
     def __init__(self):
@@ -35,7 +36,20 @@ class Shell:
         for dir in path_dirs:
             potential_path = os.path.join(dir, command)
             if os.path.isfile(potential_path) and os.access(potential_path, os.X_OK):
-                return potential_path
+                if location := executable_exists(potential_path, command):
+                    try:
+                        with os.popen(f"{location} {command}") as _exec:
+                            sys.stdout.write(_exec.read())
+                    except Exception as e:
+                        sys.stdout.write(f"Failed with Error: {e}")
+                else:
+                    return potential_path
+        return None
+    
+    def executable_exists(self, path, executable):
+        p = Path(path) / executable
+        if p.exists():
+            return p.as_posix()
         return None
     
     def execute_command(self, command_line):
