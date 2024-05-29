@@ -36,18 +36,11 @@ class Shell:
         for dir in path_dirs:
             potential_path = os.path.join(dir, command)
             if os.path.isfile(potential_path) and os.access(potential_path, os.X_OK):
-                if location := self.executable_exists(potential_path, command):
-                    try:
-                        with os.popen(f"{location} {command}") as _exec:
-                            sys.stdout.write(_exec.read())
-                    except Exception as e:
-                        sys.stdout.write(f"Failed with Error: {e}")
-                else:
-                    return potential_path
+                return potential_path
         return None
     
-    def executable_exists(self, path, executable):
-        p = Path(path) / executable
+    def executable_exists(self, path):
+        p = Path(path)
         if p.exists():
             return p.as_posix()
         return None
@@ -60,6 +53,12 @@ class Shell:
         cmd_args = parts[1:]
         if  cmd_name in self.builtins:
             self.builtins[cmd_name](cmd_args)
+        elif location := self.executable_exists(self.find_command_in_path(cmd_name)):
+                    try:
+                        with os.popen(f"{location} {cmd_args}") as _exec:
+                            sys.stdout.write(_exec.read())
+                    except Exception as e:
+                        sys.stdout.write(f"Failed with Error: {e}")
         else:
             print(f"{cmd_name}: command not found")
     
