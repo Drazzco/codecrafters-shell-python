@@ -55,7 +55,7 @@ class Shell:
             self.builtins[cmd_name](cmd_args)
         elif location := self.executable_exists(self.find_command_in_path(cmd_name)):
                     try:
-                        with os.popen(f"{location} {cmd_args[1]}") as _exec:
+                        with os.popen(f"{location} {cmd_args[0]}") as _exec:
                             sys.stdout.write(_exec.read())
                     except Exception as e:
                         sys.stdout.write(f"Failed with Error: {e}")
