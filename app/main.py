@@ -18,9 +18,13 @@ def main():
             cont = 0
             for x in args:
                 if cont > 0:
-                    command += x + " "
+                    if cont < len(args):
+                        command += x + " "
+                        cont += 1
+                    else:
+                        command += x
                 else:
-                    cont = 1
+                    cont += 1
             print(f"{command}")
         else:
             print(f"{args[0]}: command not found")
