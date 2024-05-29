@@ -9,6 +9,7 @@ class Shell:
             "exit": self.shell_exit,
             "type": self.shell_type,
             "pwd": self.shell_pwd,
+            "cd": self.shell_cd,
         }
     
     def shell_echo(self, args):
@@ -48,6 +49,13 @@ class Shell:
     
     def shell_pwd(self, args=None):
         print(f"{os.getcwd()}")
+
+    def shell_cd(self, args):
+        directory = args[0]
+        try:
+            os.chdir(os.path.expanduser(directory))
+        except OSError:
+            print(f"cd: {directory}: No such file or directory")
     
     def execute_command(self, command_line):
         parts = command_line.split()
