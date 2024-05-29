@@ -14,18 +14,7 @@ def main():
                 command = args[0] + " " + args[1]
                 print(f"{command}: command not found")
         elif args[0] == "echo":
-            command = ""
-            cont = 0
-            for x in args:
-                if cont > 0:
-                    if cont < len(args):
-                        command += x + " "
-                        cont += 1
-                    else:
-                        command += x
-                else:
-                    cont += 1
-            print(f"{command}")
+            print(" ".join(args[1:]))
         else:
             print(f"{args[0]}: command not found")
 
